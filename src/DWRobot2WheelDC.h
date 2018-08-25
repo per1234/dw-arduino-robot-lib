@@ -25,24 +25,34 @@ along with DW Robot Lib.  If not, see <https://www.gnu.org/licenses/>.
 #include "Arduino.h"
 #include "DWRobotDCMotor.h"
 
+
 class DWRobot2WheelDC
 {
   public:
     static const int analog_write_freq = DW_ROBOT_ANALOG_WRITE_FREQ;
+    static const int Move_Should_End_Not_Set = -1;
 
   public:
-    DWRobot2WheelDC(DWRobotDCMotor motorLeft, DWRobotDCMotor motorRight);
+    DWRobot2WheelDC(DWRobotDCMotor* pMotorLeft, DWRobotDCMotor* pMotorRight);
     void setup();
     void loop();
-    void forwardSpeed(int speed);
-    void backwardSpeed(int speed);
-    void speed(int speed);
-    void stop();
+    DWRobot2WheelDC& forwardSpeed(int speed);
+    DWRobot2WheelDC& backwardSpeed(int speed);
+    DWRobot2WheelDC& leftTurn(int speedValue);
+    DWRobot2WheelDC& rightTurn(int speedValue);
+    DWRobot2WheelDC& forMilliseconds(unsigned long milliseconds);
+    DWRobot2WheelDC& speed(int speed);
+    DWRobot2WheelDC& stop();
+    bool moveJustFinished();
 
   private:
-    DWRobotDCMotor& _motorLeft;
-    DWRobotDCMotor& _motorRight;
+    void checkIfWeShouldStopTheMove();
 
+  private:
+    DWRobotDCMotor* _pMotorLeft;
+    DWRobotDCMotor* _pMotorRight;
+    unsigned long   _moveShouldEnd = DWRobot2WheelDC::Move_Should_End_Not_Set;
+    bool            _moveJustFinished = false;
 };
 
 #endif //DWRobot2WheelDC_h

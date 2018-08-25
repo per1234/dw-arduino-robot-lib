@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with DW Robot Lib.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "DWRobotDCMotorL298N.h"
+
 DWRobotDCMotorL298N::DWRobotDCMotorL298N(int pin_dir_bck, int pin_dir_fwd, int pin_speed_pwm)
 {
     this->pin_dir_bck = pin_dir_bck;
@@ -27,6 +29,10 @@ void DWRobotDCMotorL298N::setup()
 {
   Serial.println("DWRobotDCMotorL298N::setup() start");
 
+  Serial.print("pins bck/fwd/pwm:");
+  Serial.print(this->pin_dir_bck);  Serial.print("/");
+  Serial.print(this->pin_dir_fwd);  Serial.print("/");
+  Serial.println(this->pin_speed_pwm);
   pinMode(this->pin_dir_bck, OUTPUT);
   pinMode(this->pin_dir_fwd, OUTPUT);
   pinMode(this->pin_speed_pwm, OUTPUT);
@@ -36,41 +42,47 @@ void DWRobotDCMotorL298N::setup()
 
 void DWRobotDCMotorL298N::speed(int speedValue)
 {
-  Serial.println("DWRobotDCMotorL298N::speed() start");
+  // Serial.println("DWRobotDCMotorL298N::speed() start");
 
   if (speedValue > 0) {
+    Serial.print("bck LOW / fwd HIGH / pwm:");
+    Serial.println(abs(speedValue));
     digitalWrite(this->pin_dir_bck, LOW);
     digitalWrite(this->pin_dir_fwd, HIGH);
     analogWrite(this->pin_speed_pwm, abs(speedValue));
   } else if (speedValue < 0) {
+    Serial.print("bck HIGH / fwd LOW / pwm:");
+    Serial.println(abs(speedValue));
     digitalWrite(this->pin_dir_bck, HIGH);
     digitalWrite(this->pin_dir_fwd, LOW);
     analogWrite(this->pin_speed_pwm, abs(speedValue));
   } else {
+    Serial.println("bck LOW / fwd LOW / pwm:0");
     digitalWrite(this->pin_dir_bck, LOW);
     digitalWrite(this->pin_dir_fwd, LOW);
     analogWrite(this->pin_speed_pwm, 0);
   }
-  Serial.println("DWRobotDCMotorL298N::speed() finished");
+  // Serial.println("DWRobotDCMotorL298N::speed() finished");
 }
 
 void DWRobotDCMotorL298N::stop()
 {
-  Serial.println("DWRobotDCMotorL298N::stop() start");
+  // Serial.println("DWRobotDCMotorL298N::stop() start");
   this->speed(0);
-  Serial.println("DWRobotDCMotorL298N::stop() finished");
+  // Serial.println("DWRobotDCMotorL298N::stop() finished");
 }
 
 void DWRobotDCMotorL298N::forwardSpeed(int speedValue)
 {
-  Serial.println("DWRobotDCMotorL298N::forwardSpeed() start");
+  // Serial.println("DWRobotDCMotorL298N::forwardSpeed() start");
   this->speed(abs(speedValue));
-  Serial.println("DWRobotDCMotorL298N::forwardSpeed() finished");
+  // Serial.println("DWRobotDCMotorL298N::forwardSpeed() finished");
 }
 
 void DWRobotDCMotorL298N::backwardSpeed(int speedValue)
 {
-  Serial.println("DWRobotDCMotorL298N::backwardSpeed() start");
+  // Serial.println("DWRobotDCMotorL298N::backwardSpeed() start");
   this->speed(abs(speedValue) * -1);
-  Serial.println("DWRobotDCMotorL298N::backwardSpeed() finished");
+  // Serial.println("DWRobotDCMotorL298N::backwardSpeed() finished");
 }
+

@@ -22,6 +22,12 @@ along with DW Robot Lib.  If not, see <https://www.gnu.org/licenses/>.
 
 class DWRobotDCMotor
 {
+    public:
+        virtual void setup() = 0;
+        virtual void speed(int speedValue) = 0;
+        virtual void stop() = 0;
+        virtual void forwardSpeed(int speedValue) = 0;
+        virtual void backwardSpeed(int speedValue) = 0;
 };
 
 #endif //DWRobotDCMotor_h

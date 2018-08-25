@@ -19,6 +19,7 @@ along with DW Robot Lib.  If not, see <https://www.gnu.org/licenses/>.
 #define DWRobotDCMotorL298N_h
 
 #include "Arduino.h"
+#include "DWRobotDCMotor.h"
 
 class DWRobotDCMotorL298N : public DWRobotDCMotor
 {
@@ -29,11 +30,11 @@ class DWRobotDCMotorL298N : public DWRobotDCMotor
 
   public:
     DWRobotDCMotorL298N(int pin_dir_bck, int pin_dir_fwd, int pin_speed_pwm);
-    void DWRobotDCMotorL298N::setup();
-    void DWRobotDCMotorL298N::speed(int speedValue);
-    void DWRobotDCMotorL298N::stop();
-    void DWRobotDCMotorL298N::forwardSpeed(int speedValue);
-    void DWRobotDCMotorL298N::backwardSpeed(int speedValue);
+    void setup();
+    void speed(int speedValue);
+    void stop();
+    void forwardSpeed(int speedValue);
+    void backwardSpeed(int speedValue);
 
   private:
 

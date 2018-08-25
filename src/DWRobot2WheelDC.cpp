@@ -42,78 +42,134 @@ Library for ESP8266 ESP-12E robot
 */
 
 #include "Arduino.h"
-#include "DWRobot.h"
+#include "DWRobot2WheelDC.h"
 
-DWRobot2WheelDC::DWRobot2WheelDC(DWRobotDCMotor& motorLeft, DWRobotDCMotor& motorRight) :
-    _motorLeft(motorLeft),
-    _motorRight(motorRight)
+DWRobot2WheelDC::DWRobot2WheelDC(DWRobotDCMotor* pMotorLeft, DWRobotDCMotor* pMotorRight)
 {
+  this->_pMotorLeft = pMotorLeft;
+  this->_pMotorRight = pMotorRight;
 }
 
 void DWRobot2WheelDC::setup()
 {
   Serial.println("DWRobot2WheelDC::setup() start");
 
+  Serial.print("analogWriteFreq:");
+  Serial.println(DWRobot2WheelDC::analog_write_freq);
   analogWriteFreq(DWRobot2WheelDC::analog_write_freq);
 
-  _motorLeft->setup();
-  _motorRight->setup();
+  _pMotorLeft->setup();
+  _pMotorRight->setup();
 
   Serial.println("DWRobot2WheelDC::setup() finished");
 }
 
 void DWRobot2WheelDC::loop()
 {
-  Serial.println("DWRobot loop");
+  // Serial.println("DWRobot2WheelDC::loop() start");
 
-  digitalWrite(DWRobot::pin_right_wheel_dir_bck, LOW);
-  digitalWrite(DWRobot::pin_right_wheel_dir_fwd, HIGH);
-  analogWrite(DWRobot::pin_right_wheel_pwm, 900);
+  _moveJustFinished = false;
+  this->checkIfWeShouldStopTheMove();
 
-  delay(2000);
-
-  digitalWrite(DWRobot::pin_right_wheel_dir_bck, LOW);
-  digitalWrite(DWRobot::pin_right_wheel_dir_fwd, LOW);
-  analogWrite(DWRobot::pin_right_wheel_pwm, 0);
-
+  // Serial.println("DWRobot2WheelDC::loop() finished");
 }
 
-void DWRobot2WheelDC::speed(int speedValue)
+DWRobot2WheelDC&  DWRobot2WheelDC::speed(int speedValue)
 {
-  Serial.println("DWRobot2WheelDC::speed() start");
+  // Serial.println("DWRobot2WheelDC::speed() start");
 
-  _motorLeft->speed(speedValue);
-  _motorRight->speed(speedValue);
+  _pMotorLeft->speed(speedValue);
+  _pMotorRight->speed(speedValue);
 
-  Serial.println("DWRobot2WheelDC::speed() finished");
+  // Serial.println("DWRobot2WheelDC::speed() finished");
+  return *this;
 }
 
-void DWRobot2WheelDC::forwardSpeed(int speedValue)
+DWRobot2WheelDC& DWRobot2WheelDC::forwardSpeed(int speedValue)
 {
-  Serial.println("DWRobot2WheelDC::forwardSpeed() start");
+  // Serial.println("DWRobot2WheelDC::forwardSpeed() start");
 
-  _motorLeft->forwardSpeed(speedValue);
-  _motorRight->forwardSpeed(speedValue);
+  _pMotorLeft->forwardSpeed(speedValue);
+  _pMotorRight->forwardSpeed(speedValue);
 
-  Serial.println("DWRobot2WheelDC::forwardSpeed() finished");
+  // Serial.println("DWRobot2WheelDC::forwardSpeed() finished");
+  return *this;
 }
 
-void DWRobot2WheelDC::backwardSpeed(int speedValue)
+DWRobot2WheelDC& DWRobot2WheelDC::backwardSpeed(int speedValue)
 {
-  Serial.println("DWRobot2WheelDC::backwardSpeed() start");
+  // Serial.println("DWRobot2WheelDC::backwardSpeed() start");
 
-  _motorLeft->backwardSpeed(speedValue);
-  _motorRight->backwardSpeed(speedValue);
+  _pMotorLeft->backwardSpeed(speedValue);
+  _pMotorRight->backwardSpeed(speedValue);
 
-  Serial.println("DWRobot2WheelDC::backwardSpeed() finished");
+  // Serial.println("DWRobot2WheelDC::backwardSpeed() finished");
+  return *this;
 }
 
-void DWRobot2WheelDC::stop()
+DWRobot2WheelDC& DWRobot2WheelDC::leftTurn(int speedValue)
 {
-  Serial.println("DWRobot2WheelDC::stop() start");
+  // Serial.println("DWRobot2WheelDC::leftTurn() start");
 
-  _motorLeft->stop();
-  _motorRight->stop();
+  _pMotorLeft->backwardSpeed(speedValue);
+  _pMotorRight->forwardSpeed(speedValue);
 
-  Serial.println("DWRobot2WheelDC::stop() finished");
+  // Serial.println("DWRobot2WheelDC::leftTurn() finished");
+  return *this;
+}
+
+DWRobot2WheelDC& DWRobot2WheelDC::rightTurn(int speedValue)
+{
+  // Serial.println("DWRobot2WheelDC::rightTurn() start");
+
+  _pMotorLeft->forwardSpeed(speedValue);
+  _pMotorRight->backwardSpeed(speedValue);
+
+  // Serial.println("DWRobot2WheelDC::rightTurn() finished");
+  return *this;
+}
+
+DWRobot2WheelDC& DWRobot2WheelDC::forMilliseconds(unsigned long milliseconds)
+{
+  // Serial.println("DWRobot2WheelDC::forMilliseconds() start");
+
+  Serial.print("DWRobot2WheelDC::forMilliseconds(");Serial.print(milliseconds);Serial.println(")");
+  _moveShouldEnd = millis() + milliseconds;
+  Serial.print("DWRobot2WheelDC::forMilliseconds() should end:");Serial.print(_moveShouldEnd);Serial.println("");
+
+  // Serial.println("DWRobot2WheelDC::forMilliseconds() finished");
+  return *this;
+}
+
+DWRobot2WheelDC& DWRobot2WheelDC::stop()
+{
+  // Serial.println("DWRobot2WheelDC::stop() start");
+
+  _moveShouldEnd = DWRobot2WheelDC::Move_Should_End_Not_Set;
+  _pMotorLeft->stop();
+  _pMotorRight->stop();
+
+  // Serial.println("DWRobot2WheelDC::stop() finished");
+  return *this;
+}
+
+bool DWRobot2WheelDC::moveJustFinished()
+{
+  return _moveJustFinished;
+}
+
+
+void DWRobot2WheelDC::checkIfWeShouldStopTheMove()
+{
+  // Serial.println("DWRobot2WheelDC::checkIfWeShouldStopTheMove() start");
+
+  unsigned long currentMillis = millis();
+
+  if (_moveShouldEnd != DWRobot2WheelDC::Move_Should_End_Not_Set && currentMillis >= _moveShouldEnd) {
+    this->stop();
+    _moveJustFinished = true;
+    Serial.println("DWRobot2WheelDC::checkIfWeShouldStopTheMove() just finished move");
+  }
+
+  // Serial.println("DWRobot2WheelDC::checkIfWeShouldStopTheMove() finished");
 }
