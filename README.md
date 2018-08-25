@@ -1,11 +1,11 @@
-= Davelopware Robotics Library for Arduino =
+# Davelopware Robotics Library for Arduino
 
 This library allows you to control unipolar or bipolar stepper motors. To use it you will need a stepper motor, and the appropriate hardware to control it.
 
 For more information about this library please visit us at
 http://www.arduino.cc/en/Reference/Stepper
 
-== License ==
+## License
 
 Copyright (c) 2018 Dave Amphlett. All right reserved.
 
