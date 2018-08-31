@@ -14,31 +14,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with DW Robot Lib.  If not, see <https://www.gnu.org/licenses/>.
-
-Library for ESP8266 ESP-12E robot
-
- Components:
-  2x dc motors driven by L298N driver module
-  1x HC-SR04 Ultra Sonic Range Sensor
-
- ESP-12E Pins assigned as follows:
-   GPIO 00 (D3)      L298N IN3          Left Wheel Dir 1
-   GPIO 01 (TX)  XXX do not use
-   GPIO 02 (D4)      L298N IN1          Right Wheel Dir 1
-   GPIO 03 (RX)
-   GPIO 04 (D2)      L298N IN4          Left Wheel Dir 2
-   GPIO 05 (D1)      L298N ENB          Left Wheel Pulse Width Modulate
-   GPIO 06 (CLK) XXX do not use
-   GPIO 07 (SD0) XXX do not use
-   GPIO 08 (SD1) XXX do not use
-   GPIO 09 (SD2) XXX do not use
-   GPIO 10 (SD3)
-   GPIO 11 (CMD) XXX do not use
-   GPIO 12 (D6)      L298N IN2          Right Wheel Dir 2
-   GPIO 13 (D7)      L298N ENA          Right Wheel Pulse Width Modulate
-   GPIO 14 (D5)
-   GPIO 16 (D0)
-   GPIO 15 (D8)
 */
 
 #include "Arduino.h"
