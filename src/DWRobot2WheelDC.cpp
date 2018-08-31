@@ -21,8 +21,8 @@ along with DW Robot Lib.  If not, see <https://www.gnu.org/licenses/>.
 
 DWRobot2WheelDC::DWRobot2WheelDC(DWRobotDCMotor* pMotorLeft, DWRobotDCMotor* pMotorRight)
 {
-  this->_pMotorLeft = pMotorLeft;
-  this->_pMotorRight = pMotorRight;
+  this->pMotorLeft = pMotorLeft;
+  this->pMotorRight = pMotorRight;
 }
 
 void DWRobot2WheelDC::setup()
@@ -33,8 +33,8 @@ void DWRobot2WheelDC::setup()
   Serial.println(DWRobot2WheelDC::analog_write_freq);
   analogWriteFreq(DWRobot2WheelDC::analog_write_freq);
 
-  _pMotorLeft->setup();
-  _pMotorRight->setup();
+  pMotorLeft->setup();
+  pMotorRight->setup();
 
   Serial.println("DWRobot2WheelDC::setup() finished");
 }
@@ -43,7 +43,7 @@ void DWRobot2WheelDC::loop()
 {
   // Serial.println("DWRobot2WheelDC::loop() start");
 
-  _moveJustFinished = false;
+  moveJustFinished = false;
   this->checkIfWeShouldStopTheMove();
 
   // Serial.println("DWRobot2WheelDC::loop() finished");
@@ -53,8 +53,8 @@ DWRobot2WheelDC&  DWRobot2WheelDC::speed(int speedValue)
 {
   // Serial.println("DWRobot2WheelDC::speed() start");
 
-  _pMotorLeft->speed(speedValue);
-  _pMotorRight->speed(speedValue);
+  pMotorLeft->speed(speedValue);
+  pMotorRight->speed(speedValue);
 
   // Serial.println("DWRobot2WheelDC::speed() finished");
   return *this;
@@ -64,8 +64,8 @@ DWRobot2WheelDC& DWRobot2WheelDC::forwardSpeed(int speedValue)
 {
   // Serial.println("DWRobot2WheelDC::forwardSpeed() start");
 
-  _pMotorLeft->forwardSpeed(speedValue);
-  _pMotorRight->forwardSpeed(speedValue);
+  pMotorLeft->forwardSpeed(speedValue);
+  pMotorRight->forwardSpeed(speedValue);
 
   // Serial.println("DWRobot2WheelDC::forwardSpeed() finished");
   return *this;
@@ -75,8 +75,8 @@ DWRobot2WheelDC& DWRobot2WheelDC::backwardSpeed(int speedValue)
 {
   // Serial.println("DWRobot2WheelDC::backwardSpeed() start");
 
-  _pMotorLeft->backwardSpeed(speedValue);
-  _pMotorRight->backwardSpeed(speedValue);
+  pMotorLeft->backwardSpeed(speedValue);
+  pMotorRight->backwardSpeed(speedValue);
 
   // Serial.println("DWRobot2WheelDC::backwardSpeed() finished");
   return *this;
@@ -86,8 +86,8 @@ DWRobot2WheelDC& DWRobot2WheelDC::leftTurn(int speedValue)
 {
   // Serial.println("DWRobot2WheelDC::leftTurn() start");
 
-  _pMotorLeft->backwardSpeed(speedValue);
-  _pMotorRight->forwardSpeed(speedValue);
+  pMotorLeft->backwardSpeed(speedValue);
+  pMotorRight->forwardSpeed(speedValue);
 
   // Serial.println("DWRobot2WheelDC::leftTurn() finished");
   return *this;
@@ -97,8 +97,8 @@ DWRobot2WheelDC& DWRobot2WheelDC::rightTurn(int speedValue)
 {
   // Serial.println("DWRobot2WheelDC::rightTurn() start");
 
-  _pMotorLeft->forwardSpeed(speedValue);
-  _pMotorRight->backwardSpeed(speedValue);
+  pMotorLeft->forwardSpeed(speedValue);
+  pMotorRight->backwardSpeed(speedValue);
 
   // Serial.println("DWRobot2WheelDC::rightTurn() finished");
   return *this;
@@ -109,8 +109,8 @@ DWRobot2WheelDC& DWRobot2WheelDC::forMilliseconds(unsigned long milliseconds)
   // Serial.println("DWRobot2WheelDC::forMilliseconds() start");
 
   Serial.print("DWRobot2WheelDC::forMilliseconds(");Serial.print(milliseconds);Serial.println(")");
-  _moveShouldEnd = millis() + milliseconds;
-  Serial.print("DWRobot2WheelDC::forMilliseconds() should end:");Serial.print(_moveShouldEnd);Serial.println("");
+  moveShouldEnd = millis() + milliseconds;
+  Serial.print("DWRobot2WheelDC::forMilliseconds() should end:");Serial.print(moveShouldEnd);Serial.println("");
 
   // Serial.println("DWRobot2WheelDC::forMilliseconds() finished");
   return *this;
@@ -120,9 +120,9 @@ DWRobot2WheelDC& DWRobot2WheelDC::stop()
 {
   // Serial.println("DWRobot2WheelDC::stop() start");
 
-  _moveShouldEnd = DWRobot2WheelDC::Move_Should_End_Not_Set;
-  _pMotorLeft->stop();
-  _pMotorRight->stop();
+  moveShouldEnd = DWRobot2WheelDC::Move_Should_End_Not_Set;
+  pMotorLeft->stop();
+  pMotorRight->stop();
 
   // Serial.println("DWRobot2WheelDC::stop() finished");
   return *this;
@@ -130,7 +130,7 @@ DWRobot2WheelDC& DWRobot2WheelDC::stop()
 
 bool DWRobot2WheelDC::moveJustFinished()
 {
-  return _moveJustFinished;
+  return moveJustFinished;
 }
 
 
@@ -140,9 +140,9 @@ void DWRobot2WheelDC::checkIfWeShouldStopTheMove()
 
   unsigned long currentMillis = millis();
 
-  if (_moveShouldEnd != DWRobot2WheelDC::Move_Should_End_Not_Set && currentMillis >= _moveShouldEnd) {
+  if (moveShouldEnd != DWRobot2WheelDC::Move_Should_End_Not_Set && currentMillis >= moveShouldEnd) {
     this->stop();
-    _moveJustFinished = true;
+    moveJustFinished = true;
     Serial.println("DWRobot2WheelDC::checkIfWeShouldStopTheMove() just finished move");
   }
 

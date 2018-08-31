@@ -49,10 +49,10 @@ class DWRobot2WheelDC
     void checkIfWeShouldStopTheMove();
 
   private:
-    DWRobotDCMotor* _pMotorLeft;
-    DWRobotDCMotor* _pMotorRight;
-    unsigned long   _moveShouldEnd = DWRobot2WheelDC::Move_Should_End_Not_Set;
-    bool            _moveJustFinished = false;
+    DWRobotDCMotor* pMotorLeft;
+    DWRobotDCMotor* pMotorRight;
+    unsigned long   moveShouldEnd = DWRobot2WheelDC::Move_Should_End_Not_Set;
+    bool            moveJustFinished = false;
 };
 
 #endif //DWRobot2WheelDC_h
